@@ -6,147 +6,46 @@ Welcome to GDB Online.
   Code, Compile, Run and Debug online from anywhere in world.
 
 *******************************************************************************/
-/******************************************************************************
-
-Welcome to GDB Online.
-  GDB online is an online compiler and debugger tool for C, C++, Python, PHP, Ruby, 
-  C#, OCaml, VB, Perl, Swift, Prolog, Javascript, Pascal, COBOL, HTML, CSS, JS
-  Code, Compile, Run and Debug online from anywhere in world.
-
-*******************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
-// 함수 선언
-double calculateAverage(int scores[], int size);
-int getStudentScore(int scores[], int size, int studentNumber);
-void printScore(int scores[], int size, double average, int option);
-void deleteStudent(int* scores, int size, int studentNumber);
+#define MAX 100 //스택 최대 크기 정의
 
-int main() {
-    int *scores;
-    int size = 30;
-    int capacity = 30;
-    int choice, studentNumber;
+int main()
+{
+    //1. 스택으로 사용할 문자 배열을 동적으로 할당
+    char *stack = (char *)malloc(MAX * sizeof(char));
+    int top = -1;
     
-    scores = (int *)malloc(capacity * sizeof(int));
-    if(!scores){
-        printf("allocation error\n");
-        return 1;
+    //입력을 받을 배열 (최대 100자 + 개해문자 + 널문자 여유 공간)
+    char input[MAX + 2];
+    
+    //메모리 할당 실패 시 안전하게 종료
+    if(stack == NULL){
+        printf("메모리 할당에 실패했습니다.\n");
+        return -1;
     }
     
-    srand(time(0));
-    for(int i=0;i<size;i++) scores[i] = rand() % 101;
-    printf("입력완료\n");
-    
-    while(1){
-        printf("---학생 성적 관리 프로그램---\n");
-        printf("1. 학생정보 추가\n");
-        printf("2. 학생정보 삭제\n");
-        printf("3. 학생정보 검색\n");
-        printf("4. 학생정보 출력(옵션 : 0, 1, 2)\n");
-        printf("5. 프로그램 종료\n");
-        scanf("%d", &choice);
-        system("clear");
-        switch(choice){
-            case 1:     //add
-                if(capacity - size < 5){
-                    capacity += 10;
-                    int *newScores = realloc(scores, capacity * sizeof(int));
-                    if(!scores){
-                        printf("allocation error\n");
-                        return 1;
-                    }
-                    scores = newScores;
-                }
-                int newScore = rand()%101;
-                scores[size] = newScore;
-                size++;
-                printf("새로운 학생 추가 : 번호 - %d, 점수 - %d\n", size, newScore);
-                
-                break;
-            case 2:     //delete
-                printf("삭제할 학생 번호 입력(1 ~ %d): ", size);
-                scanf("%d", &studentNumber);
-                deleteStudent(scores, size, studentNumber);
-                break;
-            case 3:
-                printf("검색할 학생 번호 입력(1 ~ %d): ", size);
-                scanf("%d", &studentNumber);
-                int score = getStudentScore(scores, size, studentNumber);
-                if(score != -1) printf("%d번 학생 점수 : %d\n", studentNumber-1, score);
-                else    printf("해당 학생은 없는 학생입니다.\n");
-                break;
-            case 4:
-                int option;
-                scanf("%d", &option);
-                double average = calculateAverage(scores, size);
-                printScore(scores, size, average, option);
-                break;
-            case 5:
-                free(scores);
-                printf("프로그램 종료\n");
-                return 0;
-            default:
-                printf("잘못된 입력\n");
-                break;
+    printf("문자열을 입력하세요 : ");
+    if(fgets(input, sizeof(input), stdin) != NULL){
+        
+        //2.입력받은 문자열을 스택에 Push (LIFO 구조)
+        for(int i = 0;input[i] != '\0' && i < MAX;i++){
+            //엔터(줄바꿈) 문자는 무시하고 넘어감
+            if(input[i] == '\n') continue;
+            
+            // stack 배열에 값을 넣고 top 위치 갱신 (Push 로직)
+            stack[++top] = input[i];
         }
+        // 3. 스택에서 Pop하여 거꾸로 출력
+        printf("거꾸로 출력된 문자열: ");
+        while (top >= 0) {
+            // 맨 위(top)부터 차례대로 꺼내서 출력하고 top 감소 (Pop 로직)
+            printf("%c", stack[top--]); 
+        }
+        printf("\n");
     }
+    // 4. 과제 조건: 프로그램 종료 시 메모리 해제
+    free(stack);
     return 0;
-}
-void deleteStudent(int* scores, int size, int studentNumber){
-    if(studentNumber < 1 || studentNumber > size){
-        printf("학생번호 오류\n");
-    }
-    if(scores[studentNumber-1] == -1) printf("없는 학생입니다.\n");
-    else{
-        scores[studentNumber-1] = -1;
-        printf("%d 학생 삭제완료\n", studentNumber);
-    }
-}
-
-// 평균 계산 함수
-double calculateAverage(int scores[], int size) {
-    int sum = 0;
-    for (int i = 0; i < size; i++) {
-        sum += scores[i];
-    }
-    return sum / (double)size;
-}
-
-// 특정 학생 점수 검색 함수
-int getStudentScore(int scores[], int size, int studentNumber) {
-    if (studentNumber >= 1 && studentNumber <= size) {
-        return scores[studentNumber - 1];
-    } else {
-        return -1; // 유효하지 않은 학생 번호
-    }
-}
-// 학생 성적 출력 함수
-void printScore(int scores[], int size, double average, int option){
-    switch(option){
-        case 0:
-            for(int i=0;i<size;i++){
-                if(scores[i] != -1){
-                printf("학생번호 : %d, 점수: %d\n", i+1, scores[i]);
-                }
-            }
-            break;
-        case 1:
-            printf("평균이상 학생\n");
-            for(int i=0;i<size;i++){
-                if(scores[i] >= average) printf("학생번호 : %d, 점수: %d\n", i+1, scores[i]);
-            }
-            break;
-        case 2:
-            printf("평균미만 학생\n");
-            for(int i=0;i<size;i++){
-                if(scores[i] < average) printf("학생번호 : %d, 점수: %d\n", i+1, scores[i]);
-            }
-            break;
-        default: // error
-            printf("유효하지 않은 옵션입니다.\n");
-            break;
-    }
 }
