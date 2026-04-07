@@ -6,19 +6,10 @@ Welcome to GDB Online.
   Code, Compile, Run and Debug online from anywhere in world.
 
 *******************************************************************************/
-/******************************************************************************
-
-Welcome to GDB Online.
-  GDB online is an online compiler and debugger tool for C, C++, Python, PHP, Ruby, 
-  C#, OCaml, VB, Perl, Swift, Prolog, Javascript, Pascal, COBOL, HTML, CSS, JS
-  Code, Compile, Run and Debug online from anywhere in world.
-
-*******************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
-// 함수 선언
 double calculateAverage(int scores[], int size);
 int getStudentScore(int scores[], int size, int studentNumber);
 void printScore(int scores[], int size, double average, int option);
@@ -50,7 +41,7 @@ int main() {
         scanf("%d", &choice);
         system("clear");
         switch(choice){
-            case 1:     //add
+            case 1:    
                 if(capacity - size < 5){
                     capacity += 10;
                     int *newScores = realloc(scores, capacity * sizeof(int));
@@ -66,7 +57,7 @@ int main() {
                 printf("새로운 학생 추가 : 번호 - %d, 점수 - %d\n", size, newScore);
                 
                 break;
-            case 2:     //delete
+            case 2:     
                 printf("삭제할 학생 번호 입력(1 ~ %d): ", size);
                 scanf("%d", &studentNumber);
                 deleteStudent(scores, size, studentNumber);
@@ -106,7 +97,6 @@ void deleteStudent(int* scores, int size, int studentNumber){
     }
 }
 
-// 평균 계산 함수
 double calculateAverage(int scores[], int size) {
     int sum = 0;
     for (int i = 0; i < size; i++) {
@@ -115,15 +105,13 @@ double calculateAverage(int scores[], int size) {
     return sum / (double)size;
 }
 
-// 특정 학생 점수 검색 함수
 int getStudentScore(int scores[], int size, int studentNumber) {
     if (studentNumber >= 1 && studentNumber <= size) {
         return scores[studentNumber - 1];
     } else {
-        return -1; // 유효하지 않은 학생 번호
+        return -1;
     }
 }
-// 학생 성적 출력 함수
 void printScore(int scores[], int size, double average, int option){
     switch(option){
         case 0:
