@@ -118,6 +118,7 @@ void printQueue(CircularPrintQueue *q) {
     int i = q->front;
     while (i != q->rear) {
         printf("- %s (%d페이지)\n", q->joblist[i].documentName, q->joblist[i].numPages);
+        i = (i + 1) % SIZE;
     }
     printf("-----------------------------\n");
 }
