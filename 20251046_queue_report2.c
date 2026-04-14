@@ -32,7 +32,7 @@ bool isEmpty(CircularPrintQueue *q) {
     return q->front == q->rear;
 }
 
-bool isFulll(CircularPrintQueue *q) {
+bool isFull(CircularPrintQueue *q) {
     return (q->rear +1) % SIZE == q->front;
 }
 
@@ -84,7 +84,7 @@ void cancelJob(CircularPrintQueue *q, char *name) {
         i = (i + 1) % SIZE;
     }
     
-    if (taergetIdx == -1) {
+    if (targetIdx == -1) {
         printf(">> 해당 문서('%s')가 대기열에 없습니다다.\n", name);
         return;
     }
@@ -103,7 +103,7 @@ void cancelJob(CircularPrintQueue *q, char *name) {
     q->rear = (q->rear -1 + SIZE) % SIZE;
 }
 
-void clearQueue(CIrcularPrintQueue *q) {
+void clearQueue(CircularPrintQueue *q) {
     q->front = 0;
     q->rear = 0;
     printf(">>대기열 초기화가 완료되었습니다.\n");
